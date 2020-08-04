@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const yaml = require('js-yaml');
+const initials = process.argv[2];
+const rawPairs = fs.readFileSync(0).toString();
+try {
+    const config = yaml.safeLoad(rawPairs);
+    const [authorName, authorEmailName] = names(config, initials);
+    console.log(`${authorName} <${authorEmailName}@${config.email.domain}>`);
+} catch (e) {
+    console.error(e);
+}
+
+function names(config, initials) {
+    return config.pairs[initials].split(';').map(x => x.trim());
+}

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+initials=$1
+
+cat ~/.pairs | ./extract-author $initials

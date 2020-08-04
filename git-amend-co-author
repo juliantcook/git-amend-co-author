@@ -1,0 +1,9 @@
+#!/bin/sh
+
+initials=$1
+
+previousMessage="$(git log -1 --pretty=format:%B)"
+author=$(./get-pair-email $initials)
+git commit --amend -m "${previousMessage}
+
+Co-authored-by: ${author}"

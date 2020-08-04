@@ -1,0 +1,19 @@
+{
+  "name": "git-amend-co-author",
+  "version": "1.0.0",
+  "description": "git command to quickly amend a co-author",
+  "main": "git-amend-co-author",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "pair",
+    "co-authored-by"
+  ],
+  "author": "Julian Cook",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^3.14.0"
+  }
+}
