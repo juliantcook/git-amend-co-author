@@ -1,9 +1,41 @@
-#!/bin/sh
+#!/usr/bin/env node
 
-initials=$1
+const promisify = require('util').promisify;
+const fs = require('fs');
+const yaml = require('js-yaml');
+const os = require('os');
+const exec = promisify(require('child_process').exec);
 
-previousMessage="$(git log -1 --pretty=format:%B)"
-author=$(./get-pair-email $initials)
-git commit --amend -m "${previousMessage}
+const initials = process.argv[2];
 
-Co-authored-by: ${author}"
+getLastCommitMessage()
+    .then((message) => addCoAuthor(message, initials))
+    .then(gitAmendMessage)
+    .then(console.log);
+
+function getLastCommitMessage() {
+    return exec('git log -1 --pretty=format:%B').then(({ stdout }) => stdout);
+}
+
+function addCoAuthor(originalMessage, initials) {
+    return `${originalMessage}\n\nCo-authored-by: ${getAuthorFromConfig(initials)}`;
+}
+
+function getAuthorFromConfig(initials) {
+    const rawConfig = fs.readFileSync(`${os.homedir()}/.pairs`, 'utf8');
+    try {
+        const config = yaml.safeLoad(rawConfig);
+        const [authorName, authorEmailName] = names(config, initials);
+        return `${authorName} <${authorEmailName}@${config.email.domain}>`;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function names(config, initials) {
+    return config.pairs[initials].split(';').map(x => x.trim());
+}
+
+function gitAmendMessage(message) {
+    return exec(`git commit --amend -m "${message}"`).then(({ stdout }) => stdout);
+}
