@@ -20,10 +20,19 @@ email:
 ## Install
 
     ./install.sh
+    
+This will add `git-amend-co-author` to `~/bin`.
+
 
 ## Usage
 
+If `~/bin` is on your `$PATH`:
+
     git amend-co-author jc
+    
+otherwise:
+
+    ~/bin/git-amend-co-author jc
 
 Will result in the last commit message being amended with:
  `Co-authored-by: Julian Cook <julian.cook@corporation.com>`
